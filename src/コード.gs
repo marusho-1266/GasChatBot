@@ -96,4 +96,4 @@ function calculateScore(question, questionText, keywords) {
   }
 
   return score;
-}
+} 
