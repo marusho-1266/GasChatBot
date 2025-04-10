@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQチャットボット</title>
+  <link rel="stylesheet" href="style.css">
+  <?!= HtmlService.createHtmlOutputFromFile('style.css').getContent(); ?>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-window" id="chat-window">
+      <div class="message bot-message">こんにちは！何か質問はありますか？</div>
+    </div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="質問を入力してください...">
+      <button id="send-button">送信</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <?!= HtmlService.createHtmlOutputFromFile('script.js').getContent(); ?>
+</body>
+</html>

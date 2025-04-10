@@ -1,0 +1,33 @@
+<script>
+    // JavaScriptコードをここに記述
+    document.addEventListener('DOMContentLoaded', function() {
+      const sendButton = document.getElementById('send-button');
+      const userInput = document.getElementById('user-input');
+      const chatWindow = document.getElementById('chat-window');
+  
+      sendButton.addEventListener('click', function() {
+        const userMessage = userInput.value;
+        if (userMessage.trim() !== '') {
+          // ユーザーのメッセージをチャットウィンドウに追加
+          const userDiv = document.createElement('div');
+          userDiv.classList.add('message', 'user-message');
+          userDiv.textContent = userMessage;
+          chatWindow.appendChild(userDiv);
+  
+          // ボットの応答をシミュレート（実際にはGASにリクエストを送信）
+          setTimeout(function() {
+            const botDiv = document.createElement('div');
+            botDiv.classList.add('message', 'bot-message');
+            botDiv.textContent = 'これはボットの応答です。';
+            chatWindow.appendChild(botDiv);
+  
+            // チャットウィンドウをスクロール
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+          }, 500);
+  
+          // 入力フィールドをクリア
+          userInput.value = '';
+        }
+      });
+    });
+  </script>
