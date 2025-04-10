@@ -8,16 +8,50 @@ function doGet(e) {
 
 // ユーザーが質問を送信した際に実行される関数
 function doPost(e) {
-  // ユーザーからの質問を取得
-  var question = e.parameter.question;
+  var question = null; // Initialize question
+  var answer = "申し訳ありませんが、予期せぬエラーが発生しました。"; // Default error message
 
-  // FAQデータベースから回答を検索
-  var answer = searchFAQ(question);
+  try {
+    // Ensure 'e' and 'e.question' exist
+    if (e && typeof e.question !== 'undefined') {
+      question = e.question;
+      Logger.log('Received question: ' + question);
 
-  // 回答をJSON形式で返す
-  return ContentService.createTextOutput(JSON.stringify({ "answer": answer }))
+      if (question.trim() === '') {
+         Logger.log('Received an empty question.');
+         answer = "質問が空のようです。";
+      } else {
+        // Call searchFAQ only if question is valid
+        answer = searchFAQ(question);
+        Logger.log('Answer from searchFAQ: ' + answer);
+      }
+    } else {
+      Logger.log('Error: Invalid request object received. "question" property missing or invalid.');
+      answer = "エラー：無効なリクエストを受け取りました。";
+    }
+
+  } catch (error) {
+    // Catch any unexpected errors during the process
+    Logger.log('Critical Error in doPost: ' + error + '\nStack: ' + error.stack);
+    // Keep the default error message or set a specific one
+    answer = "サーバー内部でエラーが発生しました。管理者に連絡してください。";
+  }
+
+  // Always return a JSON response
+  try {
+    var jsonResponse = JSON.stringify({ 'answer': answer });
+    Logger.log('Returning JSON: ' + jsonResponse);
+    return ContentService.createTextOutput(jsonResponse)
       .setMimeType(ContentService.MimeType.JSON);
+  } catch (jsonError) {
+    // Handle potential errors during JSON stringification (e.g., circular references)
+    Logger.log('Error stringifying the response: ' + jsonError);
+    // Return a fallback error message as plain text or simple JSON
+    return ContentService.createTextOutput(JSON.stringify({ 'answer': 'エラー：応答を生成できませんでした。' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
+
 
 // FAQデータベースから回答を検索する関数
 function searchFAQ(question) {
@@ -96,4 +130,4 @@ function calculateScore(question, questionText, keywords) {
   }
 
   return score;
-} 
+}
